@@ -45,6 +45,9 @@ Python interface to libidn (internationalized domain names library).
 %setup -q
 %patch0 -p1
 
+# don't fail on AM warnings
+%{__sed} -i -e '/AM_INIT_AUTOMAKE/s/-Werror//' configure.ac
+
 %build
 %{__libtoolize}
 %{__aclocal} -I m4 -I gl/m4 -I lib/gl/m4
