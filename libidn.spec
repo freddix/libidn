@@ -1,11 +1,11 @@
 Summary:	Internationalized string processing library
 Name:		libidn
-Version:	1.25
+Version:	1.26
 Release:	1
 License:	LGPL v2.1
 Group:		Libraries
 Source0:	http://ftp.gnu.org/gnu/libidn/%{name}-%{version}.tar.gz
-# Source0-md5:	45ffabce4b8ca87fe98fe4542668d33d
+# Source0-md5:	7533d14fbbb6c026a1a9eaa2179ccb69
 Patch0:		%{name}-python.patch
 URL:		http://www.gnu.org/software/libidn/
 BuildRequires:	autoconf
@@ -56,8 +56,7 @@ Python interface to libidn (internationalized domain names library).
 %{__automake}
 
 %configure \
-	--disable-static \
-	--enable-csharp=mono
+	--disable-static
 %{__make}
 
 %{__make} -C contrib/idn-python \
