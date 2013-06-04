@@ -1,12 +1,12 @@
 Summary:	Internationalized string processing library
-Name:		libidn
+Name:		idn
 Version:	1.26
-Release:	1
+Release:	4
 License:	LGPL v2.1
 Group:		Libraries
-Source0:	http://ftp.gnu.org/gnu/libidn/%{name}-%{version}.tar.gz
+Source0:	http://ftp.gnu.org/gnu/libidn/libidn-%{version}.tar.gz
 # Source0-md5:	7533d14fbbb6c026a1a9eaa2179ccb69
-Patch0:		%{name}-python.patch
+Patch0:		libidn-python.patch
 URL:		http://www.gnu.org/software/libidn/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -16,7 +16,7 @@ BuildRequires:	perl-base
 BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
 BuildRequires:	texinfo
-Requires(post,postun):	/usr/sbin/ldconfig
+Requires:	libidn = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -24,25 +24,32 @@ GNU Libidn is an implementation of the Stringprep, Punycode and IDNA
 specifications defined by the IETF Internationalized Domain Names
 (IDN) working group, used for internationalized domain names.
 
-%package devel
+%package -n libidn
+Summary:	Header files for libidn library
+Group:		Libraries
+
+%description -n libidn
+libidn library.
+
+%package -n libidn-devel
 Summary:	Header files for libidn library
 Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
+Requires:	libidn = %{version}-%{release}
 
-%description devel
+%description -n libidn-devel
 Header files for libidn library.
 
 %package -n python-idn
 Summary:	Python interface to libidn
 Group:		Libraries/Python
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-libs = %{version}-%{release}
 %pyrequires_eq	python-libs
 
 %description -n python-idn
 Python interface to libidn (internationalized domain names library).
 
 %prep
-%setup -q
+%setup -qn libidn-%{version}
 %patch0 -p1
 
 # don't fail on AM warnings
@@ -73,29 +80,33 @@ install -D contrib/idn-python/idn.so $RPM_BUILD_ROOT%{py_sitedir}/idn.so
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 rm -rf $RPM_BUILD_ROOT%{_datadir}/emacs/site-lisp
 
-%find_lang %{name}
+%find_lang libidn
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post
-/usr/sbin/ldconfig
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir %{_infodir} >/dev/null 2>&1
 
 %postun
-/usr/sbin/ldconfig
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir %{_infodir} >/dev/null 2>&1
 
-%files -f %{name}.lang
+%post	-n libidn -p /sbin/ldconfig
+%postun	-n libidn -p /sbin/ldconfig
+
+%files -f libidn.lang
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog FAQ NEWS README* THANKS TODO doc/libidn.html contrib
 %attr(755,root,root) %{_bindir}/idn
-%attr(755,root,root) %ghost %{_libdir}/libidn.so.??
-%attr(755,root,root) %{_libdir}/libidn.so.*.*.*
 %{_mandir}/man1/idn.1*
 %{_infodir}/libidn.info*
 
-%files devel
+%files -n libidn
+%defattr(644,root,root,755)
+%attr(755,root,root) %ghost %{_libdir}/libidn.so.??
+%attr(755,root,root) %{_libdir}/libidn.so.*.*.*
+
+%files -n libidn-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libidn.so
 %{_libdir}/libidn.la
