@@ -1,7 +1,8 @@
+# based on PLD Linux spec git://git.pld-linux.org/packages/libidn.git
 Summary:	Internationalized string processing library
 Name:		idn
 Version:	1.29
-Release:	1
+Release:	2
 License:	LGPL v2.1
 Group:		Libraries
 Source0:	http://ftp.gnu.org/gnu/libidn/libidn-%{version}.tar.gz
